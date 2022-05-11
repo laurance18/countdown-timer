@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import messagebox
 from datetime import datetime
 
 def modifyclockvar(h,m,s):
@@ -28,6 +29,8 @@ def modifyclockvar(h,m,s):
     clockvar.set(clock)
 
 def addtime(h,m,s): #Getting total amount of seconds
+    global finished #Prevent stop() from getting finished bool in a True state
+    finished = False
     return int(h.get())*3600 + int(m.get())*60 + int(s.get())
 
 def splittime(total): #Splitting seconds into hours, minutes and seconds
@@ -37,14 +40,16 @@ def splittime(total): #Splitting seconds into hours, minutes and seconds
     return h, m, s
 
 def countdown(sec): #Countdown function for the timer 
-    if finished:
-        sec = 0
+    if finished: #Stop timer if stop button is hit
+        sec = -1
 
-    if sec > 0:
+    if sec >= 0:
         root.after(1000,countdown,sec-1)
         modifyclockvar(*splittime(sec))
-    elif sec == 0:
-        pass #TODO
+        if sec == 0:
+            messagebox.showinfo("TIME'S UP","Timer has run out.") 
+        
+                   
 
 def stop():
     modifyclockvar(0,0,0)
@@ -67,7 +72,7 @@ def main():
     clockvar = StringVar()
     clockvar.set("00:00:00")
 
-    global finished
+    global finished #Stop button controller
     finished = False
 
     #Setting up labels
@@ -81,6 +86,7 @@ def main():
     minute = Scale(root, variable=minutevar, from_= 0, to=60).grid(row=2,column=1)
     second = Scale(root, variable=secondvar, from_= 0, to=60).grid(row=2,column=2)
 
+    #Setting up buttons
     B1 = Button(root,text="SET TIME",command=lambda : modifyclockvar(hourvar,minutevar,secondvar))
     B1.grid(row=3,column=0,columnspan = 3) 
 
