@@ -1,6 +1,5 @@
 from tkinter import *
 from tkinter import messagebox
-from datetime import datetime
 
 def modifyclockvar(h,m,s):
     #Formatting clockvar strings
@@ -23,7 +22,6 @@ def modifyclockvar(h,m,s):
         s = f"0{s}"
     else:
         s = f"{s}"
-
 
     clock = f"{h}:{m}:{s}"
     clockvar.set(clock)
@@ -48,8 +46,7 @@ def countdown(sec): #Countdown function for the timer
         modifyclockvar(*splittime(sec))
         if sec == 0:
             messagebox.showinfo("TIME'S UP","Timer has run out.") 
-        
-                   
+             
 
 def stop():
     modifyclockvar(0,0,0)
@@ -95,7 +92,6 @@ def main():
 
     B3 = Button(root,text="STOP",command=lambda : stop())
     B3.grid(row=5,column=0,columnspan = 3) 
-
 
     root.mainloop()
 
