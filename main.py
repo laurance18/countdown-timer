@@ -3,28 +3,56 @@ from datetime import datetime
 
 def modifyclockvar(h,m,s):
     #Formatting clockvar strings
-    if int(h.get())<10:
-        h = f"0{h.get()}"
+    if type(h) == int and type(m) == int and type(s) == int:
+        pass
+    else: 
+        h = h.get()
+        m = m.get()
+        s = s.get()
+    
+    if int(h)<10:
+        h = f"0{h}"
     else:
-        h = f"{h.get()}"
-    if int(m.get())<10:
-        m = f"0{m.get()}"
+        h = f"{h}"
+    if int(m)<10:
+        m = f"0{m}"
     else:
-        m = f"{m.get()}"
-    if int(s.get())<10:
-        s = f"0{s.get()}"
+        m = f"{m}"
+    if int(s)<10:
+        s = f"0{s}"
     else:
-        s = f"{s.get()}"
+        s = f"{s}"
 
 
     clock = f"{h}:{m}:{s}"
     clockvar.set(clock)
 
+def addtime(h,m,s): #Getting total amount of seconds
+    
+    return int(h.get())*3600 + int(m.get())*60 + int(s.get())
+
+def splittime(total): #Splitting seconds into hours, minutes and seconds
+    
+    h = total // 3600
+    m = (total % 3600) // 60
+    s = ((total % 3600) % 60)
+    return h, m, s
+
+def countdown(sec): #Countdown function for the timer
+    
+    if sec >= 0:
+        root.after(1000,countdown,sec-1)
+        modifyclockvar(*splittime(sec))
+
+def stop():
+    modifyclockvar(0,0,0)
+
 def main():
     #Mainwindow
+    global root
     root = Tk()
     root.title("Countdown Timer")
-    root.geometry("250x200")
+    root.geometry("250x220")
 
     #Setting up vars
     hourvar = StringVar()
@@ -46,8 +74,15 @@ def main():
     minute = Scale(root, variable=minutevar, from_= 0, to=60).grid(row=2,column=1)
     second = Scale(root, variable=secondvar, from_= 0, to=60).grid(row=2,column=2)
 
-    B = Button(root,text="START TIMER",command=lambda : modifyclockvar(hourvar,minutevar,secondvar))
-    B.grid(row=3,column=0,columnspan = 3) 
+    B1 = Button(root,text="SET TIME",command=lambda : modifyclockvar(hourvar,minutevar,secondvar))
+    B1.grid(row=3,column=0,columnspan = 3) 
+
+    B2 = Button(root,text="START",command=lambda : countdown(addtime(hourvar,minutevar,secondvar)))
+    B2.grid(row=4,column=0,columnspan = 3) 
+
+    B3 = Button(root,text="STOP",command=lambda : stop())
+    B3.grid(row=5,column=0,columnspan = 3) 
+
 
     root.mainloop()
 
