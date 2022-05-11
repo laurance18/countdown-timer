@@ -28,24 +28,28 @@ def modifyclockvar(h,m,s):
     clockvar.set(clock)
 
 def addtime(h,m,s): #Getting total amount of seconds
-    
     return int(h.get())*3600 + int(m.get())*60 + int(s.get())
 
 def splittime(total): #Splitting seconds into hours, minutes and seconds
-    
     h = total // 3600
     m = (total % 3600) // 60
     s = ((total % 3600) % 60)
     return h, m, s
 
-def countdown(sec): #Countdown function for the timer
-    
-    if sec >= 0:
+def countdown(sec): #Countdown function for the timer 
+    if finished:
+        sec = 0
+
+    if sec > 0:
         root.after(1000,countdown,sec-1)
         modifyclockvar(*splittime(sec))
+    elif sec == 0:
+        pass #TODO
 
 def stop():
     modifyclockvar(0,0,0)
+    global finished
+    finished = True
 
 def main():
     #Mainwindow
@@ -62,6 +66,9 @@ def main():
     global clockvar
     clockvar = StringVar()
     clockvar.set("00:00:00")
+
+    global finished
+    finished = False
 
     #Setting up labels
     hourLabel = Label(root,text="Hour").grid(row=0,column=0)
